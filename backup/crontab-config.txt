@@ -1,0 +1,2 @@
+#creates backup of the server at 16:30 UTC everyday
+30 16 * * * /minecraft/MCServer/backups.sh
