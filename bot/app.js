@@ -1,8 +1,16 @@
 const discord = require('discord.js') ;
 const client = new discord.Client() ;
 const shell = require('shelljs') ;
-const token = '<enter token here>';
+const querystring = require('querystring') ;
+const axios = require('axios') ;
+const googleapi = '<google api key here>' ;
+const token = '<token here>' ;
 
+client.login(token) ;
+
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Set Status~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 client.on('ready', ()=> {
         console.log(`Bot up and Running as ${client.user.tag}!`) ;
@@ -23,12 +31,14 @@ client.on('ready', ()=> {
 }) ;
 
 
-client.login(token) ;
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~Start/Stop the Server~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 client.on('message', msg => {
         if(msg.content === 'chotu server chalu krr' || msg.content === 'server chalu krr bsdk' || msg.content === 'server chala' || msg.content === 'chotu server chala' || msg.content === 'server chalu karr bhosdi' ) {
                 msg.reply('starting the server ji') ;
-                shell.exec('/minecraft/MCServer/bot/scripts/start.sh',{silent:true ,async:true}) ;
+                shell.exec(__dirname + '/scripts/start.sh',{silent:true ,async:true}) ;
         } ;
 
         if(msg.content === '--stop') {
@@ -37,6 +47,36 @@ client.on('message', msg => {
 }) ;
 
 
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Commands~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//yt()
+
+client.on('message', msg =>{
+	if(msg.content.startsWith('yt.')) {
+		let search = { 	q : msg.content.split('.')[1] ,
+				part : 'snippet' ,
+				maxResults : 30 ,
+				key : googleapi
+		}
+
+		axios.get('https://www.googleapis.com/youtube/v3/search?' + querystring.stringify(search))
+			.then((res)=> {
+			msg.reply('https://www.youtube.com/watch?v=' + res.data.items[0].id.videoId) ;
+			
+			})
+			.catch( err=> {
+				console.log(err) ;
+			}) ;
+
+		
+		
+
+		
+	}
+
+}) ;
 
 
 
